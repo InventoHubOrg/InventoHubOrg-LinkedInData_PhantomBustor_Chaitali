@@ -1,4 +1,26 @@
-        name: Run PhantomBuster and Upload to S3
+name: Run PhantomBuster and Upload to S3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-phantombuster:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          npm init -y
+          npm install axios aws-sdk
+
+      - name: Run PhantomBuster and Upload to S3
         env:
           SECRET: ${{ secrets.SECRET }}
           BUCKET_NAME: 'phantombusterdata'
@@ -34,7 +56,7 @@
             const s3 = new AWS.S3({
               accessKeyId: accessKeyId,
               secretAccessKey: secretAccessKey,
-              region: 'us-east-1' // Set this to your S3 bucket's region
+              region: 'us-east-1'
             });
 
             await s3.upload({
